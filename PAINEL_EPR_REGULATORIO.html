@@ -162,6 +162,91 @@
   /* ALERT */
   .alert-strip{background:#FFF3CD;border:1px solid #FFD54F;border-radius:8px;
     padding:10px 16px;font-size:12px;color:#7A4E00;display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+
+  /* ═══════════════════════════════════════════════
+     MOBILE RESPONSIVE — max-width 768px
+  ═══════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* Header */
+    .top-bar{
+      padding:12px 16px;min-height:70px;flex-wrap:wrap;gap:10px;
+    }
+    .top-bar .logo{gap:10px;}
+    .epr-logo{height:34px;padding:3px 7px;}
+    .hdr-sep{display:none;}
+    .top-bar h1{font-size:12px;}
+    .top-bar p{font-size:10px;display:none;}
+    .date-badge{display:none;}
+    .logout-btn{padding:5px 10px;font-size:10px;}
+
+    /* Nav — scroll horizontal */
+    .nav{
+      padding:0 8px;overflow-x:auto;gap:2px;
+      scrollbar-width:none;-ms-overflow-style:none;
+    }
+    .nav::-webkit-scrollbar{display:none;}
+    .nav button{
+      font-size:10px;padding:8px 10px;white-space:nowrap;
+    }
+
+    /* Filters */
+    .filters{padding:8px 12px;gap:6px;}
+    .filters label{font-size:10px;}
+    .filter-btn{padding:3px 10px;font-size:10px;}
+
+    /* Main */
+    main{padding:14px 12px;}
+
+    /* KPI grid — 2 colunas no mobile */
+    .kpi-grid{
+      grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;
+    }
+    .kpi{padding:12px 14px;}
+    .kpi .kpi-val{font-size:22px;}
+    .kpi .kpi-label{font-size:9px;}
+
+    /* Section title */
+    .sec-title{font-size:11px;padding:4px 0 8px;}
+
+    /* Tables — scroll horizontal */
+    .table-wrap{border-radius:8px;margin-bottom:16px;}
+    table{font-size:11px;min-width:500px;}
+    thead th{padding:8px 10px;font-size:10px;}
+    tbody td{padding:7px 10px;}
+
+    /* Alert */
+    .alert-strip{padding:8px 12px;font-size:11px;}
+
+    /* Rep grid — 1 coluna no mobile */
+    .rep-grid{grid-template-columns:1fr;gap:10px;}
+    .rep-card{padding:12px 14px;}
+    .rc-comite{font-size:10px;}
+
+    /* Rep filter bar */
+    .rep-filter-bar{gap:6px;}
+    .rep-filter{padding:4px 10px;font-size:10px;}
+
+    /* Search */
+    .search-wrap input{font-size:11px;padding:7px 12px 7px 32px;}
+
+    /* Login card */
+    .login-card{width:92%;padding:28px 24px;}
+    .login-card h2{font-size:16px;}
+    .login-card p{font-size:11px;}
+    .login-card input{padding:10px 12px;font-size:13px;}
+    .login-card button{padding:11px;font-size:13px;}
+  }
+
+  /* Extra pequeno — max-width 480px */
+  @media (max-width: 480px) {
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .kpi .kpi-val{font-size:20px;}
+    .nav button{font-size:9px;padding:7px 8px;}
+    table{font-size:10px;min-width:420px;}
+    thead th{padding:7px 8px;font-size:9px;}
+    tbody td{padding:6px 8px;}
+  }
 </style>
 </head>
 <body>
