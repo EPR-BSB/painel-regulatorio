@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Regulatório — Grupo EPR</title>
+<style>
+  :root {
+    --epr-dark:#1B3A5C; --epr-med:#1F4872; --epr-sage:#7DB5A0; --epr-sage-d:#5A9485;
+    --epr-light:#E8F2EF; --epr-blue-l:#EBF2FA;
+    --bg:#F4F7F9; --card:#FFFFFF; --text:#1A2B3C; --muted:#607385; --border:#D4E2EC;
+    --green:#1B7A34; --green-bg:#E8F5E9;
+    --red:#C0392B;   --red-bg:#FDECEA;
+    --orange:#C05C00; --orange-bg:#FFF3E0;
+    --purple:#5E3080; --purple-bg:#F0E8F8;
+    --blue:#1558A8;  --blue-bg:#E8F0FC;
+    --radius:10px; --shadow:0 2px 14px rgba(27,58,92,.09);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);}
+
+  /* LOGIN */
+  #login-screen{position:fixed;inset:0;z-index:9999;
+    background:linear-gradient(160deg,#1B3A5C 0%,#1F4872 50%,#2A5E4E 100%);
+    display:flex;align-items:center;justify-content:center;}
+  .login-card{background:#fff;border-radius:16px;padding:40px 44px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);width:360px;text-align:center;
+    border-top:5px solid #7DB5A0;}
+  .login-card h2{font-size:18px;color:var(--epr-dark);margin-bottom:4px;}
+  .login-card p{font-size:12px;color:var(--muted);margin-bottom:28px;}
+  .login-card input{width:100%;border:1.5px solid #C9D9EC;border-radius:8px;
+    padding:11px 14px;font-size:14px;outline:none;margin-bottom:14px;transition:border .2s;}
+  .login-card input:focus{border-color:var(--epr-med);}
+  .login-card button{width:100%;background:var(--epr-dark);color:#fff;border:none;
+    border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;}
+  .login-card button:hover{background:#7DB5A0;}
+  .login-error{color:var(--red);font-size:12px;margin-top:8px;display:none;}
+  .login-card .version{font-size:10px;color:#ccc;margin-top:20px;}
+
+  /* HEADER */
+  .top-bar{position:relative;overflow:hidden;min-height:88px;
+    padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+    box-shadow:0 4px 18px rgba(27,58,92,.35);}
+  .header-ribbon{position:absolute;inset:0;z-index:0;}
+  .header-ribbon svg{width:100%;height:100%;}
+  .top-bar .logo{position:relative;z-index:1;display:flex;align-items:center;gap:16px;}
+  .epr-logo{height:46px;width:auto;object-fit:contain;background:rgba(255,255,255,0.95);
+    border-radius:8px;padding:5px 10px;box-shadow:0 2px 12px rgba(0,0,0,.22);}
+  .hdr-sep{width:1px;height:42px;background:rgba(125,181,160,.5);flex-shrink:0;}
+  .top-bar h1{color:#fff;font-size:15px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+  .top-bar p{color:rgba(255,255,255,.78);font-size:11px;margin-top:2px;}
+  .top-bar .right{position:relative;z-index:1;display:flex;align-items:center;gap:12px;}
+  .date-badge{background:rgba(255,255,255,.12);border:1px solid rgba(125,181,160,.35);
+    border-radius:8px;padding:6px 14px;color:#fff;font-size:11px;text-align:right;}
+  .logout-btn{background:rgba(125,181,160,.18);border:1px solid rgba(125,181,160,.4);
+    color:#fff;border-radius:8px;padding:6px 14px;font-size:11px;cursor:pointer;transition:all .2s;}
+  .logout-btn:hover{background:rgba(125,181,160,.32);}
+
+  /* NAV */
+  .nav{background:var(--epr-dark);padding:0 32px;display:flex;gap:4px;
+    border-bottom:3px solid var(--epr-sage);}
+  .nav button{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.65);
+    font-size:12px;font-weight:600;padding:10px 16px;border-bottom:3px solid transparent;
+    margin-bottom:-3px;transition:all .2s;border-radius:6px 6px 0 0;}
+  .nav button:hover{color:#fff;background:rgba(255,255,255,.08);}
+  .nav button.active{color:#fff;border-bottom-color:#7DB5A0;background:rgba(125,181,160,.15);}
+
+  /* FILTERS */
+  .filters{background:var(--card);padding:10px 32px;display:flex;gap:10px;
+    align-items:center;flex-wrap:wrap;border-bottom:1px solid #DDE5EF;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  .filters label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .filter-btn{border:1.5px solid #C9D9EC;background:#fff;border-radius:20px;
+    padding:4px 13px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text);}
+  .filter-btn:hover{border-color:var(--epr-med);color:var(--epr-med);}
+  .filter-btn.active{background:var(--epr-dark);border-color:var(--epr-dark);color:#fff;}
+
+  /* MAIN */
+  main{padding:22px 32px;}
+  .tab-panel{display:none;} .tab-panel.active{display:block;}
+
+  /* KPIs */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+  .kpi{background:var(--card);border-radius:var(--radius);padding:16px 18px;
+    box-shadow:var(--shadow);border-left:4px solid var(--epr-sage);}
+  .kpi.green{border-left-color:var(--green);} .kpi.orange{border-left-color:var(--orange);}
+  .kpi.purple{border-left-color:var(--purple);} .kpi.teal{border-left-color:var(--epr-sage-d);}
+  .kpi .kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);}
+  .kpi .kpi-val{font-size:28px;font-weight:800;color:var(--epr-dark);line-height:1.1;margin:4px 0 2px;}
+  .kpi .kpi-sub{font-size:10px;color:var(--muted);}
+
+  /* SECTION TITLE */
+  .sec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+    color:var(--epr-dark);padding:6px 0 10px;margin-top:6px;
+    display:flex;align-items:center;gap:8px;}
+  .sec-title::after{content:'';flex:1;height:1px;background:var(--epr-light);}
+
+  /* TABLE */
+  .table-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px;overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:600px;}
+  thead tr{background:var(--epr-dark);}
+  thead th{padding:10px 13px;color:#fff;font-weight:600;font-size:11px;text-align:left;white-space:nowrap;}
+  tbody tr{border-bottom:1px solid #EEF2F7;transition:background .12s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#F5F8FC;}
+  tbody td{padding:9px 13px;vertical-align:middle;line-height:1.4;}
+  tbody tr.hidden{display:none;}
+
+  /* BADGES */
+  .badge{display:inline-block;border-radius:12px;padding:3px 10px;font-size:10px;font-weight:700;white-space:nowrap;}
+  .badge-antt   {background:var(--orange-bg);color:var(--orange);}
+  .badge-artesp {background:var(--purple-bg);color:var(--purple);}
+  .badge-abcr   {background:var(--epr-light); color:var(--epr-dark);}
+  .badge-transv {background:#F2F5F8;color:#555;}
+  .badge-virtual{background:var(--blue-bg);color:var(--blue);}
+  .badge-pres   {background:var(--green-bg);color:var(--green);}
+  .badge-enc    {background:var(--red-bg);color:var(--red);}
+  .badge-ok     {background:var(--green-bg);color:var(--green);}
+  .badge-urg    {background:var(--orange-bg);color:var(--orange);}
+  .badge-ap     {background:var(--orange-bg);color:var(--orange);}
+  .badge-cp     {background:var(--purple-bg);color:var(--purple);}
+  .badge-ft     {background:var(--blue-bg);color:var(--blue);}
+  .badge-nao    {background:var(--red-bg);color:var(--red);}
+  .badge-sim    {background:var(--green-bg);color:var(--green);}
+  .badge-titular  {background:#E8F5E9;color:#1B7A34;}
+  .badge-suplente {background:#FFF8E1;color:#C05C00;}
+  .badge-forum  {background:var(--blue-bg);color:var(--blue);}
+  .badge-mailing{background:#F0E8F8;color:#5E3080;}
+  .badge-comite {background:var(--epr-light);color:var(--epr-dark);}
+
+  /* REPS */
+  .rep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:22px;}
+  .rep-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:16px 18px;border-top:3px solid var(--epr-sage);transition:transform .15s,box-shadow .15s;}
+  .rep-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(27,58,92,.14);}
+  .rep-card.ft-card{border-top-color:var(--blue);} .rep-card.for-card{border-top-color:var(--epr-sage-d);}
+  .rep-card.mail-card{border-top-color:var(--purple);}
+  .rc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+  .rc-comite{font-size:11px;font-weight:700;color:var(--epr-dark);line-height:1.3;flex:1;padding-right:8px;}
+  .rep-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .rep-row:last-child{margin-bottom:0;}
+  .rep-avatar{width:30px;height:30px;border-radius:50%;background:var(--epr-light);
+    color:var(--epr-dark);display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;flex-shrink:0;}
+  .rep-avatar.supl{background:#FFF8E1;color:#C05C00;}
+  .rep-avatar.forum{background:var(--blue-bg);color:var(--blue);}
+  .rep-avatar.mail{background:#F0E8F8;color:#5E3080;}
+  .rep-info{flex:1;min-width:0;}
+  .rep-name{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rep-email{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rep-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .rep-filter{border:1.5px solid #C9D9EC;background:#fff;border-radius:20px;
+    padding:5px 14px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text);}
+  .rep-filter:hover{border-color:var(--epr-med);color:var(--epr-med);}
+  .rep-filter.active{background:var(--epr-dark);border-color:var(--epr-dark);color:#fff;}
+  .search-wrap{position:relative;margin-bottom:16px;}
+  .search-wrap input{width:100%;max-width:360px;border:1.5px solid #C9D9EC;border-radius:8px;
+    padding:8px 14px 8px 36px;font-size:12px;outline:none;transition:border .2s;}
+  .search-wrap input:focus{border-color:var(--epr-med);}
+  .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
+
+  /* ALERT */
+  .alert-strip{background:#FFF3CD;border:1px solid #FFD54F;border-radius:8px;
+    padding:10px 16px;font-size:12px;color:#7A4E00;display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+
+  /* ═══════════════════════════════════════════════
+     MOBILE RESPONSIVE — max-width 768px
+  ═══════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+
+    /* Header */
+    .top-bar{
+      padding:12px 16px;min-height:70px;flex-wrap:wrap;gap:10px;
+    }
+    .top-bar .logo{gap:10px;}
+    .epr-logo{height:34px;padding:3px 7px;}
+    .hdr-sep{display:none;}
+    .top-bar h1{font-size:12px;}
+    .top-bar p{font-size:10px;display:none;}
+    .date-badge{display:none;}
+    .logout-btn{padding:5px 10px;font-size:10px;}
+
+    /* Nav — scroll horizontal */
+    .nav{
+      padding:0 8px;overflow-x:auto;gap:2px;
+      scrollbar-width:none;-ms-overflow-style:none;
+    }
+    .nav::-webkit-scrollbar{display:none;}
+    .nav button{
+      font-size:10px;padding:8px 10px;white-space:nowrap;
+    }
+
+    /* Filters */
+    .filters{padding:8px 12px;gap:6px;}
+    .filters label{font-size:10px;}
+    .filter-btn{padding:3px 10px;font-size:10px;}
+
+    /* Main */
+    main{padding:14px 12px;}
+
+    /* KPI grid — 2 colunas no mobile */
+    .kpi-grid{
+      grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;
+    }
+    .kpi{padding:12px 14px;}
+    .kpi .kpi-val{font-size:22px;}
+    .kpi .kpi-label{font-size:9px;}
+
+    /* Section title */
+    .sec-title{font-size:11px;padding:4px 0 8px;}
+
+    /* Tables — scroll horizontal */
+    .table-wrap{border-radius:8px;margin-bottom:16px;}
+    table{font-size:11px;min-width:500px;}
+    thead th{padding:8px 10px;font-size:10px;}
+    tbody td{padding:7px 10px;}
+
+    /* Alert */
+    .alert-strip{padding:8px 12px;font-size:11px;}
+
+    /* Rep grid — 1 coluna no mobile */
+    .rep-grid{grid-template-columns:1fr;gap:10px;}
+    .rep-card{padding:12px 14px;}
+    .rc-comite{font-size:10px;}
+
+    /* Rep filter bar */
+    .rep-filter-bar{gap:6px;}
+    .rep-filter{padding:4px 10px;font-size:10px;}
+
+    /* Search */
+    .search-wrap input{font-size:11px;padding:7px 12px 7px 32px;}
+
+    /* Login card */
+    .login-card{width:92%;padding:28px 24px;}
+    .login-card h2{font-size:16px;}
+    .login-card p{font-size:11px;}
+    .login-card input{padding:10px 12px;font-size:13px;}
+    .login-card button{padding:11px;font-size:13px;}
+  }
+
+  /* Extra pequeno — max-width 480px */
+  @media (max-width: 480px) {
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .kpi .kpi-val{font-size:20px;}
+    .nav button{font-size:9px;padding:7px 8px;}
+    table{font-size:10px;min-width:420px;}
+    thead th{padding:7px 8px;font-size:9px;}
+    tbody td{padding:6px 8px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    
+    <h2>Painel Regulatório EPR</h2>
+    <p>Diretoria de Assuntos Institucionais<br>Digite a senha para acessar</p>
+    <input type="password" id="pw-input" placeholder="Senha de acesso"
+      onkeydown="if(event.key==='Enter') doLogin()">
+    <button onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">❌ Senha incorreta. Tente novamente.</div>
+    <div class="version">Grupo EPR · Gerado em 06/05/2026</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<div class="top-bar">
+  <div class="header-ribbon" aria-hidden="true">
+    <svg viewBox="0 0 1400 96" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hbg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#1B3A5C"/>
+          <stop offset="55%"  stop-color="#1F4872"/>
+          <stop offset="100%" stop-color="#16324F"/>
+        </linearGradient>
+        <linearGradient id="roadg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#16324F" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#0F2236" stop-opacity="1"/>
+        </linearGradient>
+        <linearGradient id="greenglow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stop-color="#7DB5A0" stop-opacity="0"/>
+          <stop offset="50%"  stop-color="#7DB5A0" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#7DB5A0" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <rect width="1400" height="96" fill="url(#hbg)"/>
+      <ellipse cx="700" cy="80" rx="600" ry="30" fill="url(#greenglow)"/>
+      <path d="M900,96 Q1000,55 1100,68 Q1200,78 1300,52 Q1370,36 1400,40 L1400,96 Z" fill="#16324F" opacity="0.7"/>
+      <path d="M0,96 L0,55 Q80,38 160,52 Q280,72 380,48 Q460,30 500,96 Z" fill="#16324F" opacity="0.6"/>
+      <polygon points="530,96 870,96 760,52 640,52" fill="url(#roadg)"/>
+      <polygon points="516,96 532,96 621,52 606,52" fill="#7DB5A0" opacity="0.22"/>
+      <polygon points="868,96 884,96 793,52 778,52" fill="#7DB5A0" opacity="0.22"/>
+      <polygon points="692,82 703,82 698,68 687,68" fill="#FFFFFF" opacity="0.35"/>
+      <rect x="0" y="0" width="1400" height="3" fill="#7DB5A0" opacity="0.7"/>
+      <rect x="0" y="93" width="1400" height="3" fill="#7DB5A0" opacity="0.35"/>
+    </svg>
+  </div>
+  <div class="logo">
+    <span style="color:#fff;font-size:22px;font-weight:900">EPR</span>
+    <div class="hdr-sep"></div>
+    <div>
+      <h1>Painel de Monitoramento Regulatório</h1>
+      <p>Diretoria de Assuntos Institucionais &nbsp;·&nbsp; Acompanhamento Regulatório</p>
+    </div>
+  </div>
+  <div class="right">
+    <div class="date-badge">Atualizado em<br><b>06/05/2026</b></div>
+    <button class="logout-btn" onclick="doLogout()">🔒 Sair</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button onclick="switchTab('reunioes',this)">📅 Reuniões ABCR</button>
+  <button onclick="switchTab('contrib',this)">📝 Contribuições EPR</button>
+  <button onclick="switchTab('apcp',this)">🏛 AP · CP · FT</button>
+  <button onclick="switchTab('reps',this)">👥 Representantes EPR</button>
+</nav>
+
+<div class="filters" id="filters-bar">
+  <label>Filtrar por agência:</label>
+  <button class="filter-btn active" onclick="filterAgencia('TODOS',this)">Todos</button>
+  <button class="filter-btn" onclick="filterAgencia('ANTT',this)">ANTT</button>
+  <button class="filter-btn" onclick="filterAgencia('ARTESP',this)">ARTESP</button>
+  <button class="filter-btn" onclick="filterAgencia('ABCR',this)">ABCR</button>
+</div>
+
+<main>
+
+<!-- DASHBOARD -->
+<section class="tab-panel active" id="tab-dashboard">
+  <div class="kpi-grid">
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">9</span></div>
+    <div class="kpi orange"><span class="kpi-label">Audiências Públicas</span><span class="kpi-val">0</span></div>
+    <div class="kpi purple"><span class="kpi-label">Consultas Públicas</span><span class="kpi-val">3</span></div>
+    <div class="kpi teal"><span class="kpi-label">Representantes EPR/ABCR</span><span class="kpi-val">21</span></div>
+  </div>
+
+  <div class="sec-title">⚠️ Controle de Prazos — AP, CP e Contribuições</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Tipo</th><th>Assunto</th><th>Agência</th><th>Prazo Final</th><th>Status</th><th>Responsável</th></tr></thead>
+    <tbody>
+        <tr data-ag="ARTESP">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 06/2026 — Resiliência Climática</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td>20/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
+          <td>Fórum PPCS</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 001/2026 — SAC</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>27/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td>Fórum PPCS</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 003/2026 — Nível de Serviço</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td>31/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
+          <td>Fórum PPCS</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>ADIs Licenciamento Ambiental — Síntese Técnica</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>31/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td>FT-Licenciamento Ambiental</td>
+        </tr></tbody>
+  </table></div>
+
+  <div class="sec-title">📅 Últimas Reuniões Realizadas</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Data</th><th>Assunto</th><th>Comitê</th><th>Agência</th><th>Presença</th><th>Participantes EPR</th></tr></thead>
+    <tbody>
+        <tr data-ag="ARTESP">
+          <td>12/03/2026</td>
+          <td>Consultas Públicas ARTESP Free-flow</td>
+          <td style="font-size:11px">Fórum PPCS / CDMR / CSJ / FF Free Flow</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td>13/03/2026</td>
+          <td>Checkpoint 2: Eventograma ANTT</td>
+          <td style="font-size:11px">FF Eventrogramas</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Priscila - EPR VM / Erica - EPR IG / Mateus - EPR LP / Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="TODOS">
+          <td>18/03/2026</td>
+          <td>Atualiz. sobre possíveis suspensão de multas do free flow</td>
+          <td style="font-size:11px">-</td>
+          <td><span class="badge badge-transv">Transversal</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">José Cassaniga / Carlos Framarim / Luciano Louzane / Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>26/03/2026</td>
+          <td>Alteração do Representante EPR/ABCR</td>
+          <td style="font-size:11px">Conselho ABCR</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td style="font-size:11px">José Cassaniga / Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>30/03/2026</td>
+          <td>Alterações do Estatuto Social da ABCR</td>
+          <td style="font-size:11px">CSJ</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Mariana Galhardo / Mayara Regina / Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td>31/03/2026</td>
+          <td>Consulta Pública: Nível de Serviço</td>
+          <td style="font-size:11px">Fórum PPCS</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>13/04/2026</td>
+          <td>55º Reunião Ordinária do CDMR</td>
+          <td style="font-size:11px">CDMR</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td style="font-size:11px">Luciano Lourenço / Paulo Manoel</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td>17/04/2026</td>
+          <td>Reunião Infraplan e ABCR - Nível de Serviço ARTESP</td>
+          <td style="font-size:11px">Fórum PPCS</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>30/04/2026</td>
+          <td>Reunião Ordinária Fórum Free Flow</td>
+          <td style="font-size:11px">Fórum Free Flow</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+        </tr></tbody>
+  </table></div>
+</section>
+
+<!-- REUNIÕES -->
+<section class="tab-panel" id="tab-reunioes">
+  <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:18px;">
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">9</span></div>
+    <div class="kpi" style="border-left-color:#7DB5A0"><span class="kpi-label">% com Participação EPR</span><span class="kpi-val">100%</span></div>
+  </div>
+
+  <div class="sec-title">✅ Reuniões Realizadas</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Data</th><th>Início</th><th>Fim</th><th>Presença</th><th>Assunto</th><th>Comitê Principal</th><th>Agência</th><th>Participantes EPR</th><th>Acompanhamento Inst.</th></tr></thead>
+    <tbody>
+        <tr data-ag="ARTESP">
+          <td>12/03/2026</td><td>16:00</td><td>17:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Consultas Públicas ARTESP Free-flow</td><td>Fórum PPCS / CDMR / CSJ / FF Free Flow</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+          <td>Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td>13/03/2026</td><td>15:00</td><td>16:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Checkpoint 2: Eventograma ANTT</td><td>FF Eventrogramas</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td style="font-size:11px">Priscila - EPR VM / Erica - EPR IG / Mateus - EPR LP / Bruna Rodrigues</td>
+          <td>Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="TODOS">
+          <td>18/03/2026</td><td>10:00</td><td>11:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Atualiz. sobre possíveis suspensão de multas do free flow</td><td>-</td>
+          <td><span class="badge badge-transv">Transversal</span></td>
+          <td style="font-size:11px">José Cassaniga / Carlos Framarim / Luciano Louzane / Luciano Lourenço</td>
+          <td>Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>26/03/2026</td><td>12:30</td><td>14:00</td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td>Alteração do Representante EPR/ABCR</td><td>Conselho ABCR</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td style="font-size:11px">José Cassaniga / Luciano Lourenço</td>
+          <td>Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>30/03/2026</td><td>10:00</td><td>11:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Alterações do Estatuto Social da ABCR</td><td>CSJ</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td style="font-size:11px">Mariana Galhardo / Mayara Regina / Bruna Rodrigues</td>
+          <td>Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td>31/03/2026</td><td>14:00</td><td>14:30</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Consulta Pública: Nível de Serviço</td><td>Fórum PPCS</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td style="font-size:11px">Bruna Rodrigues</td>
+          <td>Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>13/04/2026</td><td>16:00:00</td><td>18:00:00</td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td>55º Reunião Ordinária do CDMR</td><td>CDMR</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td style="font-size:11px">Luciano Lourenço / Paulo Manoel</td>
+          <td>Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td>17/04/2026</td><td>17:00:00</td><td>17:30:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Reunião Infraplan e ABCR - Nível de Serviço ARTESP</td><td>Fórum PPCS</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td style="font-size:11px">Bruna Rodrigues</td>
+          <td>Bruna Rodrigues</td>
+        </tr>
+        <tr data-ag="ABCR">
+          <td>30/04/2026</td><td>09:00:00</td><td>10:00:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Reunião Ordinária Fórum Free Flow</td><td>Fórum Free Flow</td>
+          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+          <td>Luciano Lourenço</td>
+        </tr></tbody>
+  </table></div>
+</section>
+
+<!-- CONTRIBUIÇÕES -->
+<section class="tab-panel" id="tab-contrib">
+  <div class="sec-title">📋 Processos Obrigatórios — ANTT · ARTEMIG e demais</div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px;">
+    <div class="kpi"><span class="kpi-label">Total de Processos</span><span class="kpi-val">3</span></div>
+    <div class="kpi green"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">3</span></div>
+    <div class="kpi" style="border-left-color:#7DB5A0"><span class="kpi-label">% de Contribuição EPR</span><span class="kpi-val">100%</span></div>
+  </div>
+  <div class="sec-title">🔵 ARTESP — acompanhamento (não obrigatório)</div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px;">
+    <div class="kpi" style="border-left-color:var(--purple)"><span class="kpi-label">Total de Processos ARTESP</span><span class="kpi-val">1</span></div>
+    <div class="kpi" style="border-left-color:var(--purple)"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">0</span></div>
+    <div class="kpi" style="border-left-color:var(--purple)"><span class="kpi-label">% Acompanhamento</span><span class="kpi-val">0%</span></div>
+  </div>
+  <div class="sec-title">📝 Controle de Contribuições EPR</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Assunto</th><th>Área Fim</th><th>Agência</th><th>Prazo ABCR</th><th>Pedido Int. EPR</th><th>EPR LP</th><th>EPR VM</th><th>EPR IG</th><th>EPR PR</th><th>Contrib. Formal</th><th>Responsável</th><th>Prazo Cumprido</th><th>Observações</th></tr></thead>
+    <tbody>
+        <tr data-ag="ANTT">
+          <td>Consulta Pública nº 001/2026 - SAC</td><td>PPCS</td><td><span class="badge badge-antt">ANTT</span></td>
+          <td>27/03/2026</td><td>-</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td>Bruna Rodrigues</td>
+          <td style="text-align:center"><span class="badge badge-nao">Não</span></td>
+          <td style="font-size:11px;color:#555">Enviado 26/03 fora do prazo.  · Sugestões não acatadas em totalidade.</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td>Síntese técnica | ADIs Licenciamento Ambiental – contribuições FT</td><td>FT-Licenciamento Ambiental</td><td><span class="badge badge-antt">ANTT</span></td>
+          <td>31/03/2026</td><td>30/03/2026</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td>Bruna Rodrigues</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="font-size:11px;color:#555">Contribuições enviadas 31/03</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td>Consulta Pública nº 003/2026 - Nível de Serviço</td><td>PPCS</td><td><span class="badge badge-artesp">ARTESP</span></td>
+          <td>30/03/2026</td><td>31/03/2026</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center"><span class="badge badge-nao">Não</span></td>
+          <td>Bruna Rodrigues</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="font-size:11px;color:#555">Assunto Técnico ARTESP — apenas acompanhamento</td>
+        </tr>
+        <tr data-ag="TODOS">
+          <td>Cartilha Free Flow</td><td>FF - Free Flow</td><td><span class="badge badge-transv">Transversal</span></td>
+          <td>30/04/2026</td><td>24/04/2026</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td>Bruna Rodrigues</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="font-size:11px;color:#555">Solicitação apenas de concessionárias que possuem Free Flow - Estaduais</td>
+        </tr></tbody>
+  </table></div>
+</section>
+
+<!-- AP / CP / FT -->
+<section class="tab-panel" id="tab-apcp">
+  <div class="sec-title">🏛 Audiências Públicas · Consultas Públicas · Forças de Trabalho</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Tipo</th><th>Assunto</th><th>Documento</th><th>Agência</th><th>Responsável</th><th>Recebimento</th><th>Prazo ABCR</th><th>Prazo Final</th><th>Manifestação EPR</th><th>Status</th><th>Observações</th></tr></thead>
+    <tbody>
+        <tr data-ag="ARTESP">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 06/2026 — Resiliência Climática</td>
+          <td style="font-size:11px">Consulta Pública nº 06/2026</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td>Fórum PPCS</td>
+          <td>13/03/2026</td><td>17/03/2026</td><td>20/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-nao">Não</span></td>
+          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
+          <td style="font-size:11px;color:#555">Manifestação do Setor pela ABCR</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 001/2026 — SAC</td>
+          <td style="font-size:11px">Consulta Pública nº 01/2026</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>Fórum PPCS</td>
+          <td>24/02/2026</td><td>24/03/2026</td><td>27/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td style="font-size:11px;color:#555">Contribuições enviadas em 26/03</td>
+        </tr>
+        <tr data-ag="ARTESP">
+          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
+          <td>Consulta Pública nº 003/2026 — Nível de Serviço</td>
+          <td style="font-size:11px">Consulta Pública nº 03/2026</td>
+          <td><span class="badge badge-artesp">ARTESP</span></td>
+          <td>Fórum PPCS</td>
+          <td>24/03/2026</td><td>30/03/2026</td><td>31/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
+          <td style="font-size:11px;color:#555">Setor não se manifestou e pediu mais prazo para a ARTESP</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>ADIs Licenciamento Ambiental — Síntese Técnica</td>
+          <td style="font-size:11px">Manifestação do SETOR</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>FT-Licenciamento Ambiental</td>
+          <td>27/03/2026</td><td>31/03/2026</td><td>31/03/2026</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td style="font-size:11px;color:#555">Contribuições enviadas em 31/03</td>
+        </tr></tbody>
+  </table></div>
+</section>
+
+<!-- REPRESENTANTES -->
+<section class="tab-panel" id="tab-reps">
+  <div class="rep-filter-bar">
+    <button class="rep-filter active" onclick="filterReps('TODOS',this)">Todos</button>
+    <button class="rep-filter" onclick="filterReps('COMITE',this)">🏛 Comitês</button>
+    <button class="rep-filter" onclick="filterReps('FORUM',this)">💬 Fóruns</button>
+    <button class="rep-filter" onclick="filterReps('FT',this)">🔧 Forças de Trabalho</button>
+    <button class="rep-filter" onclick="filterReps('MAILING',this)">📧 Mailings</button>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar por nome ou instância..." oninput="searchReps(this.value)">
+  </div>
+  <div class="rep-grid" id="rep-grid">
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE GOVERNANÇA E ÉTICA</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">CB</div>
+        <div class="rep-info">
+          <div class="rep-name">Camila Bonetti</div>
+          <div class="rep-email">camila.silva@grupoepr.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">MR</div>
+        <div class="rep-info">
+          <div class="rep-name">Mayara Regina Batista Lima</div>
+          <div class="rep-email">mayara.lima@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE SUSTENTABILIDADE</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">FA</div>
+        <div class="rep-info">
+          <div class="rep-name">Flávia Amado</div>
+          <div class="rep-email">flavia.amado@eprviamineira.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">CG</div>
+        <div class="rep-info">
+          <div class="rep-name">Cassia Gabrielli Padilha</div>
+          <div class="rep-email">cassia.padilha@eprlpioneiro.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE ENGENHARIA E INFRAESTRUTURA</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">GA</div>
+        <div class="rep-info">
+          <div class="rep-name">Guillermo Altrichter</div>
+          <div class="rep-email">guillermo.altrichter@eprtriangulo.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE SEGURANÇA E QUALIDADE OPERACIONAL</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">FM</div>
+        <div class="rep-info">
+          <div class="rep-name">Fernando Milleo</div>
+          <div class="rep-email">fernando.milleo@eprlpioneiro.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE IMAGEM SETORIAL</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">PS</div>
+        <div class="rep-info">
+          <div class="rep-name">Pablo Solano</div>
+          <div class="rep-email">pablo.solano@grupoepr.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">NM</div>
+        <div class="rep-info">
+          <div class="rep-name">Natalia Manfrin Dias</div>
+          <div class="rep-email">natalia.manfrin@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE SEGURANÇA JURÍDICA</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">JP</div>
+        <div class="rep-info">
+          <div class="rep-name">Julia Paes Leme</div>
+          <div class="rep-email">julia.paesleme@grupoepr.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">MG</div>
+        <div class="rep-info">
+          <div class="rep-name">Mariana Galhardo</div>
+          <div class="rep-email">mariana.galhardo@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card " data-type="COMITE">
+      <div class="rc-header">
+        <span class="rc-comite">COMITÊ DE DESENVOLVIMENTO DE MERCADO E REGULAÇÃO</span>
+        <span class="badge badge-comite">Comitê</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar ">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div><span class="badge badge-titular">Titular</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar supl">NC</div>
+        <div class="rep-info">
+          <div class="rep-name">Nagila Cardoso</div>
+          <div class="rep-email">nagila.cardoso@grupoepr.com.br</div>
+        </div><span class="badge badge-suplente">Suplente</span>
+      </div>
+    </div>
+    <div class="rep-card for-card" data-type="FORUM">
+      <div class="rc-header">
+        <span class="rc-comite">FÓRUM PPCS</span>
+        <span class="badge badge-forum">Fórum</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">BR</div>
+        <div class="rep-info">
+          <div class="rep-name">Bruna Rodrigues Alves</div>
+          <div class="rep-email">bruna.alves@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card for-card" data-type="FORUM">
+      <div class="rc-header">
+        <span class="rc-comite">FÓRUM LEGISLATIVO</span>
+        <span class="badge badge-forum">Fórum</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card for-card" data-type="FORUM">
+      <div class="rc-header">
+        <span class="rc-comite">FÓRUM MINAS GERAIS</span>
+        <span class="badge badge-forum">Fórum</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">DS</div>
+        <div class="rep-info">
+          <div class="rep-name">Diogo Santiago</div>
+          <div class="rep-email">diogo.santiago@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: REFORMA TRIBUTÁRIA</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LD</div>
+        <div class="rep-info">
+          <div class="rep-name">Lucas de Castro Maia</div>
+          <div class="rep-email">lucas.maia@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LN</div>
+        <div class="rep-info">
+          <div class="rep-name">Leandro Nishiyama</div>
+          <div class="rep-email">leandro.nishiyama@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: METODOLOGIA EFEITOS EXTRAORDINÁRIOS</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LF</div>
+        <div class="rep-info">
+          <div class="rep-name">Lucas Ferrari de Oliveira Bessa</div>
+          <div class="rep-email">lucas.ferrari@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">MG</div>
+        <div class="rep-info">
+          <div class="rep-name">Mariana Galhardo</div>
+          <div class="rep-email">mariana.galhardo@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: SEGUROS</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LC</div>
+        <div class="rep-info">
+          <div class="rep-name">Leandro Cappa</div>
+          <div class="rep-email">Leandro.Cappa@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">KJ</div>
+        <div class="rep-info">
+          <div class="rep-name">Karla Jardes</div>
+          <div class="rep-email">karla.jardes@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: SEGURADORAS</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LC</div>
+        <div class="rep-info">
+          <div class="rep-name">Leandro Cappa</div>
+          <div class="rep-email">Leandro.Cappa@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">KJ</div>
+        <div class="rep-info">
+          <div class="rep-name">Karla Jardes</div>
+          <div class="rep-email">karla.jardes@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: LICENCIAMENTO AMBIENTAL</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">FA</div>
+        <div class="rep-info">
+          <div class="rep-name">Flávia Amado</div>
+          <div class="rep-email">flavia.amado@eprviamineira.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">CG</div>
+        <div class="rep-info">
+          <div class="rep-name">Cassia Gabrielli Padilha</div>
+          <div class="rep-email">cassia.padilha@eprlpioneiro.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: ICMS-SP ASFALTO-BORRACHA</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">GE</div>
+        <div class="rep-info">
+          <div class="rep-name">Guillermo Eduardo Altrichter</div>
+          <div class="rep-email">guillermo.altrichter@eprtriangulo.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card ft-card" data-type="FT">
+      <div class="rc-header">
+        <span class="rc-comite">FORÇA-TAREFA: ADICIONALIDADE — CRÉDITO DE CARBONO</span>
+        <span class="badge badge-ft">FT</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">FA</div>
+        <div class="rep-info">
+          <div class="rep-name">Flávia Amado</div>
+          <div class="rep-email">flavia.amado@eprviamineira.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card mail-card" data-type="MAILING">
+      <div class="rc-header">
+        <span class="rc-comite">Mailing - Reforma Tributária - Arrecadação de Pedágio</span>
+        <span class="badge badge-mailing">Mailing</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">MG</div>
+        <div class="rep-info">
+          <div class="rep-name">Mariana Galhardo</div>
+          <div class="rep-email">mariana.galhardo@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">SM</div>
+        <div class="rep-info">
+          <div class="rep-name">Sophia Machado</div>
+          <div class="rep-email">sophia.machado@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">CG</div>
+        <div class="rep-info">
+          <div class="rep-name">Caroline Gutstein</div>
+          <div class="rep-email">caroline.gutstein@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div>
+    <div class="rep-card mail-card" data-type="MAILING">
+      <div class="rc-header">
+        <span class="rc-comite">Mailing - Geral</span>
+        <span class="badge badge-mailing">Mailing</span>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">LL</div>
+        <div class="rep-info">
+          <div class="rep-name">Luciano Lourenço</div>
+          <div class="rep-email">luciano.lourenco@grupoepr.com.br</div>
+        </div>
+      </div>
+      <div class="rep-row">
+        <div class="rep-avatar forum">BR</div>
+        <div class="rep-info">
+          <div class="rep-name">Bruna Rodrigues Alves</div>
+          <div class="rep-email">bruna.alves@grupoepr.com.br</div>
+        </div>
+      </div>
+    </div></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const SENHA = "EPR@2026";
+
+function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === SENHA) {
+    sessionStorage.setItem('epr_auth','1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  } else {
+    const err = document.getElementById('login-error');
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    setTimeout(()=> err.style.display='none', 3000);
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem('epr_auth');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+if (sessionStorage.getItem('epr_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('filters-bar').style.display = id==='reps' ? 'none' : 'flex';
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  document.querySelectorAll('tbody tr').forEach(r=>r.classList.remove('hidden'));
+}
+function filterAgencia(ag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelector('.tab-panel.active').querySelectorAll('tbody tr').forEach(row => {
+    const rowAg = row.getAttribute('data-ag');
+    row.classList.toggle('hidden', ag!=='TODOS' && rowAg!==ag && rowAg!=='TODOS');
+  });
+}
+function filterReps(type, btn) {
+  document.querySelectorAll('.rep-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.rep-card').forEach(c=>{
+    c.style.display = (type==='TODOS' || c.dataset.type===type) ? '' : 'none';
+  });
+}
+function searchReps(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.rep-card').forEach(c=>{
+    c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  if (!q) {
+    document.querySelectorAll('.rep-filter').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.rep-filter').classList.add('active');
+  }
+}
+</script>
+</body>
+</html>
