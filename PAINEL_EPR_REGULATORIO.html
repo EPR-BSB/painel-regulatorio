@@ -261,7 +261,7 @@
       onkeydown="if(event.key==='Enter') doLogin()">
     <button onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-error">❌ Senha incorreta. Tente novamente.</div>
-    <div class="version">Grupo EPR · Gerado em 14/05/2026</div>
+    <div class="version">Grupo EPR · Gerado em 15/05/2026</div>
   </div>
 </div>
 
@@ -308,7 +308,7 @@
     </div>
   </div>
   <div class="right">
-    <div class="date-badge">Atualizado em<br><b>14/05/2026</b></div>
+    <div class="date-badge">Atualizado em<br><b>15/05/2026</b></div>
     <button class="logout-btn" onclick="doLogout()">🔒 Sair</button>
   </div>
 </div>
@@ -334,7 +334,7 @@
 <!-- DASHBOARD -->
 <section class="tab-panel active" id="tab-dashboard">
   <div class="kpi-grid">
-    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">11</span></div>
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">13</span></div>
     <div class="kpi orange"><span class="kpi-label">Audiências Públicas</span><span class="kpi-val">0</span></div>
     <div class="kpi purple"><span class="kpi-label">Consultas Públicas</span><span class="kpi-val">3</span></div>
     <div class="kpi teal"><span class="kpi-label">Representantes EPR/ABCR</span><span class="kpi-val">21</span></div>
@@ -375,6 +375,22 @@
           <td>31/03/2026</td>
           <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
           <td>FT-Licenciamento Ambiental</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>Cartilha Free Flow</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>30/04/2026</td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td>FT-Free Flow</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>Dados de Monitoramento Free Flow nº 01</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>15/05/2026</td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td>FT-Free Flow</td>
         </tr></tbody>
   </table></div>
 
@@ -385,7 +401,7 @@
         <tr data-ag="ARTESP">
           <td>12/03/2026</td>
           <td>Consultas Públicas ARTESP Free-flow</td>
-          <td style="font-size:11px">Fórum PPCS / CDMR / CSJ / FF Free Flow</td>
+          <td style="font-size:11px">Fórum PPCS</td>
           <td><span class="badge badge-artesp">ARTESP</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Luciano Lourenço</td>
@@ -393,7 +409,7 @@
         <tr data-ag="ANTT">
           <td>13/03/2026</td>
           <td>Checkpoint 2: Eventograma ANTT</td>
-          <td style="font-size:11px">FF Eventrogramas</td>
+          <td style="font-size:11px">FT Eventrogramas</td>
           <td><span class="badge badge-antt">ANTT</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Priscila - EPR VM / Erica - EPR IG / Mateus - EPR LP / Bruna Rodrigues</td>
@@ -406,19 +422,19 @@
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">José Cassaniga / Carlos Framarim / Luciano Louzane / Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>26/03/2026</td>
           <td>Alteração do Representante EPR/ABCR</td>
           <td style="font-size:11px">Conselho ABCR</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-pres">Presencial</span></td>
           <td style="font-size:11px">José Cassaniga / Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>30/03/2026</td>
           <td>Alterações do Estatuto Social da ABCR</td>
           <td style="font-size:11px">CSJ</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Mariana Galhardo / Mayara Regina / Bruna Rodrigues</td>
         </tr>
@@ -430,11 +446,11 @@
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Bruna Rodrigues</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>13/04/2026</td>
           <td>55º Reunião Ordinária do CDMR</td>
           <td style="font-size:11px">CDMR</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-pres">Presencial</span></td>
           <td style="font-size:11px">Luciano Lourenço / Paulo Manoel</td>
         </tr>
@@ -446,19 +462,27 @@
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Bruna Rodrigues</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>30/04/2026</td>
           <td>Reunião Ordinária Fórum Free Flow</td>
           <td style="font-size:11px">Fórum Free Flow</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
+          <td>11/05/2026</td>
+          <td>56º Reunião Ordinária do CDMR</td>
+          <td style="font-size:11px">CDMR</td>
+          <td><span class="badge badge-transv">Transversal</span></td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="TODOS">
           <td>12/05/2026</td>
           <td>27ª reunião ordinária Comitê de Sustentabilidade</td>
           <td style="font-size:11px">CSUS</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Flávia Amado / Cássia Padilha</td>
         </tr>
@@ -469,6 +493,14 @@
           <td><span class="badge badge-transv">Transversal</span></td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td style="font-size:11px">Leandro Nishiayma / Carolina Dala Costa / Enio Stein / Fernanda Matias / Rafael Valente</td>
+        </tr>
+        <tr data-ag="TODOS">
+          <td>14/05/2026</td>
+          <td>Resolução SENATRAN</td>
+          <td style="font-size:11px">-</td>
+          <td><span class="badge badge-transv">ARTEMIG</span></td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td style="font-size:11px">Diogo/ Conceição</td>
         </tr></tbody>
   </table></div>
 </section>
@@ -476,7 +508,7 @@
 <!-- REUNIÕES -->
 <section class="tab-panel" id="tab-reunioes">
   <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:18px;">
-    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">11</span></div>
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">13</span></div>
     <div class="kpi" style="border-left-color:#7DB5A0"><span class="kpi-label">% com Participação EPR</span><span class="kpi-val">100%</span></div>
   </div>
 
@@ -487,7 +519,7 @@
         <tr data-ag="ARTESP">
           <td>12/03/2026</td><td>16:00</td><td>17:00</td>
           <td><span class="badge badge-virtual">Virtual</span></td>
-          <td>Consultas Públicas ARTESP Free-flow</td><td>Fórum PPCS / CDMR / CSJ / FF Free Flow</td>
+          <td>Consultas Públicas ARTESP Free-flow</td><td>Fórum PPCS</td>
           <td><span class="badge badge-artesp">ARTESP</span></td>
           <td style="font-size:11px">Luciano Lourenço</td>
           <td>Luciano Lourenço</td>
@@ -495,7 +527,7 @@
         <tr data-ag="ANTT">
           <td>13/03/2026</td><td>15:00</td><td>16:00</td>
           <td><span class="badge badge-virtual">Virtual</span></td>
-          <td>Checkpoint 2: Eventograma ANTT</td><td>FF Eventrogramas</td>
+          <td>Checkpoint 2: Eventograma ANTT</td><td>FT Eventrogramas</td>
           <td><span class="badge badge-antt">ANTT</span></td>
           <td style="font-size:11px">Priscila - EPR VM / Erica - EPR IG / Mateus - EPR LP / Bruna Rodrigues</td>
           <td>Bruna Rodrigues</td>
@@ -508,19 +540,19 @@
           <td style="font-size:11px">José Cassaniga / Carlos Framarim / Luciano Louzane / Luciano Lourenço</td>
           <td>Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>26/03/2026</td><td>12:30</td><td>14:00</td>
           <td><span class="badge badge-pres">Presencial</span></td>
           <td>Alteração do Representante EPR/ABCR</td><td>Conselho ABCR</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">José Cassaniga / Luciano Lourenço</td>
           <td>Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>30/03/2026</td><td>10:00</td><td>11:00</td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td>Alterações do Estatuto Social da ABCR</td><td>CSJ</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">Mariana Galhardo / Mayara Regina / Bruna Rodrigues</td>
           <td>Bruna Rodrigues</td>
         </tr>
@@ -532,11 +564,11 @@
           <td style="font-size:11px">Bruna Rodrigues</td>
           <td>Bruna Rodrigues</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>13/04/2026</td><td>16:00:00</td><td>18:00:00</td>
           <td><span class="badge badge-pres">Presencial</span></td>
           <td>55º Reunião Ordinária do CDMR</td><td>CDMR</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">Luciano Lourenço / Paulo Manoel</td>
           <td>Luciano Lourenço</td>
         </tr>
@@ -548,19 +580,27 @@
           <td style="font-size:11px">Bruna Rodrigues</td>
           <td>Bruna Rodrigues</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
           <td>30/04/2026</td><td>09:00:00</td><td>10:00:00</td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td>Reunião Ordinária Fórum Free Flow</td><td>Fórum Free Flow</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">Luciano Lourenço</td>
           <td>Luciano Lourenço</td>
         </tr>
-        <tr data-ag="ABCR">
+        <tr data-ag="TODOS">
+          <td>11/05/2026</td><td>14:00</td><td>17:00:00</td>
+          <td><span class="badge badge-pres">Presencial</span></td>
+          <td>56º Reunião Ordinária do CDMR</td><td>CDMR</td>
+          <td><span class="badge badge-transv">Transversal</span></td>
+          <td style="font-size:11px">Luciano Lourenço</td>
+          <td>Luciano Lourenço</td>
+        </tr>
+        <tr data-ag="TODOS">
           <td>12/05/2026</td><td>10:00:00</td><td>12:00:00</td>
           <td><span class="badge badge-virtual">Virtual</span></td>
           <td>27ª reunião ordinária Comitê de Sustentabilidade</td><td>CSUS</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
+          <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">Flávia Amado / Cássia Padilha</td>
           <td>-</td>
         </tr>
@@ -571,6 +611,14 @@
           <td><span class="badge badge-transv">Transversal</span></td>
           <td style="font-size:11px">Leandro Nishiayma / Carolina Dala Costa / Enio Stein / Fernanda Matias / Rafael Valente</td>
           <td>-</td>
+        </tr>
+        <tr data-ag="TODOS">
+          <td>14/05/2026</td><td>17:00:00</td><td>18:00:00</td>
+          <td><span class="badge badge-virtual">Virtual</span></td>
+          <td>Resolução SENATRAN</td><td>-</td>
+          <td><span class="badge badge-transv">ARTEMIG</span></td>
+          <td style="font-size:11px">Diogo/ Conceição</td>
+          <td>Bruna Rodrigues</td>
         </tr></tbody>
   </table></div>
 </section>
@@ -579,8 +627,8 @@
 <section class="tab-panel" id="tab-contrib">
   <div class="sec-title">📋 Processos Obrigatórios — ANTT · ARTEMIG e demais</div>
   <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px;">
-    <div class="kpi"><span class="kpi-label">Total de Processos</span><span class="kpi-val">4</span></div>
-    <div class="kpi green"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">4</span></div>
+    <div class="kpi"><span class="kpi-label">Total de Processos</span><span class="kpi-val">5</span></div>
+    <div class="kpi green"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">5</span></div>
     <div class="kpi" style="border-left-color:#7DB5A0"><span class="kpi-label">% de Contribuição EPR</span><span class="kpi-val">100%</span></div>
   </div>
   <div class="sec-title">🔵 ARTESP — acompanhamento (não obrigatório)</div>
@@ -652,6 +700,18 @@
           <td>Bruna Rodrigues</td>
           <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
           <td style="font-size:11px;color:#555">Solicitação apenas de concessionárias que possuem Free Flow - Estaduais</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td>Monitoramento Free Flow</td><td>FF - Free Flow</td><td><span class="badge badge-antt">ANTT</span></td>
+          <td>15/05/2026</td><td>15/05/2026</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34">✓</td>
+          <td style="text-align:center;font-weight:700;color:#1B7A34"></td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td>Bruna Rodrigues</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="font-size:11px;color:#555">Dados de monitoramento do Free Flow - Encaminhamento de dados técnico pelo Fernando Mileo</td>
         </tr></tbody>
   </table></div>
 </section>
@@ -705,6 +765,28 @@
           <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
           <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
           <td style="font-size:11px;color:#555">Contribuições enviadas em 31/03</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>Cartilha Free Flow</td>
+          <td style="font-size:11px">Envio de Dados</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>FT-Free Flow</td>
+          <td>24/04/2026</td><td>30/04/2026</td><td>30/04/2026</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td style="font-size:11px;color:#555">Dados enviados</td>
+        </tr>
+        <tr data-ag="ANTT">
+          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
+          <td>Dados de Monitoramento Free Flow nº 01</td>
+          <td style="font-size:11px">Envio de Dados</td>
+          <td><span class="badge badge-antt">ANTT</span></td>
+          <td>FT-Free Flow</td>
+          <td>12/05/2026</td><td>15/05/2026</td><td>15/05/2026</td>
+          <td style="text-align:center"><span class="badge badge-sim">Sim</span></td>
+          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
+          <td style="font-size:11px;color:#555">Monitoramento1 - enviado 15/05</td>
         </tr></tbody>
   </table></div>
 </section>
