@@ -159,6 +159,14 @@
   .search-wrap input:focus{border-color:var(--epr-med);}
   .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
 
+  /* DASH FILTERS */
+  .dash-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0 16px;}
+  .dash-filter-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .df-btn{border:1.5px solid #C9D9EC;background:#fff;border-radius:20px;padding:4px 13px;
+    font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text);}
+  .df-btn:hover{border-color:var(--epr-med);color:var(--epr-med);}
+  .df-btn.active{background:var(--epr-dark);border-color:var(--epr-dark);color:#fff;}
+
   /* ALERT */
   .alert-strip{background:#FFF3CD;border:1px solid #FFD54F;border-radius:8px;
     padding:10px 16px;font-size:12px;color:#7A4E00;display:flex;align-items:center;gap:10px;margin-bottom:18px;}
@@ -333,248 +341,69 @@
 
 <!-- DASHBOARD -->
 <section class="tab-panel active" id="tab-dashboard">
-  <div class="kpi-grid">
-    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">19</span></div>
-    <div class="kpi orange"><span class="kpi-label">Audiências Públicas</span><span class="kpi-val">0</span></div>
-    <div class="kpi purple"><span class="kpi-label">Consultas Públicas</span><span class="kpi-val">3</span></div>
-    <div class="kpi teal"><span class="kpi-label">Representantes EPR/ABCR</span><span class="kpi-val">22</span></div>
+
+  <!-- Filtros -->
+  <div class="dash-filters">
+    <span class="dash-filter-label">Período:</span>
+    <button class="df-btn active" onclick="dashFilter(this,'ano')" data-period="ano">Acumulado 2026</button>
+    <button class="df-btn" onclick="dashFilter(this,'tri')" data-period="tri">Últimos 3 meses</button>
+    <button class="df-btn" onclick="dashFilter(this,'mes')" data-period="mes">Mês atual</button>
+    <span class="dash-filter-label" style="margin-left:12px">Agência:</span>
+    <button class="df-btn active" onclick="dashAgencia(this,'TODOS')" data-ag="TODOS">Todos</button>
+    <button class="df-btn" onclick="dashAgencia(this,'ANTT')" data-ag="ANTT">ANTT</button>
+    <button class="df-btn" onclick="dashAgencia(this,'ARTESP')" data-ag="ARTESP">ARTESP</button>
+    <button class="df-btn" onclick="dashAgencia(this,'ARTEMIG')" data-ag="ARTEMIG">ARTEMIG</button>
+    <button class="df-btn" onclick="dashAgencia(this,'ABCR')" data-ag="ABCR">ABCR</button>
   </div>
 
-  <div class="sec-title">⚠️ Controle de Prazos — AP, CP e Contribuições</div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Tipo</th><th>Assunto</th><th>Agência</th><th>Prazo Final</th><th>Status</th><th>Responsável</th></tr></thead>
-    <tbody>
-        <tr data-ag="ARTESP">
-          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
-          <td>Consulta Pública nº 06/2026 — Resiliência Climática</td>
-          <td><span class="badge badge-artesp">ARTESP</span></td>
-          <td>20/03/2026</td>
-          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
-          <td>Fórum PPCS</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
-          <td>Consulta Pública nº 001/2026 — SAC</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>27/03/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>Fórum PPCS</td>
-        </tr>
-        <tr data-ag="ARTESP">
-          <td><span class="badge badge-cp">CONSULTA PÚB.</span></td>
-          <td>Consulta Pública nº 003/2026 — Nível de Serviço</td>
-          <td><span class="badge badge-artesp">ARTESP</span></td>
-          <td>31/03/2026</td>
-          <td style="text-align:center"><span class="badge badge-urg">⚠️ Acompanhamento</span></td>
-          <td>Fórum PPCS</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>ADIs Licenciamento Ambiental — Síntese Técnica</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>31/03/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>FT-Licenciamento Ambiental</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>Cartilha Free Flow</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>30/04/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>FT-Free Flow</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>Dados de Monitoramento Free Flow nº 01</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>15/05/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>FT-Free Flow</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>Dados Gerais SPEs- Anuário 2025 ABCR</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>19/05/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>GT CIS</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>Dados Gerais SPEs-Homenagem Bienal</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>19/05/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>GT CIS</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td><span class="badge badge-ft">FORÇA DE TRAB.</span></td>
-          <td>Interoperabilidade Free Flow</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td>01/06/2026</td>
-          <td style="text-align:center"><span class="badge badge-ok">✅ Enviado</span></td>
-          <td>FT-Free Flow</td>
-        </tr></tbody>
-  </table></div>
+  <!-- KPIs -->
+  <div class="kpi-grid" style="margin-bottom:16px">
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val" id="d-reun">19</span></div>
+    <div class="kpi green"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">8 / 9</span></div>
+    <div class="kpi" style="border-left-color:var(--epr-sage)"><span class="kpi-label">% Contribuição EPR</span><span class="kpi-val">100%</span></div>
+    <div class="kpi orange"><span class="kpi-label">AP + CP + FT</span><span class="kpi-val">9</span></div>
+    <div class="kpi teal"><span class="kpi-label">Representantes EPR</span><span class="kpi-val">22</span></div>
+  </div>
 
-  <div class="sec-title">📅 Últimas Reuniões Realizadas</div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Data</th><th>Assunto</th><th>Comitê</th><th>Agência</th><th>Presença</th><th>Participantes EPR</th></tr></thead>
-    <tbody>
-        <tr data-ag="ARTESP">
-          <td>12/03/2026</td>
-          <td>Consultas Públicas ARTESP Free-flow</td>
-          <td style="font-size:11px">Fórum PPCS</td>
-          <td><span class="badge badge-artesp">ARTESP</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Luciano Lourenço</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td>13/03/2026</td>
-          <td>Checkpoint 2: Eventograma ANTT</td>
-          <td style="font-size:11px">FT Eventrogramas</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Priscila - EPR VM / Erica - EPR IG / Mateus - EPR LP / Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>18/03/2026</td>
-          <td>Atualiz. sobre possíveis suspensão de multas do free flow</td>
-          <td style="font-size:11px">-</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">José Cassaniga / Carlos Framarim / Luciano Louzane / Luciano Lourenço</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>26/03/2026</td>
-          <td>Alteração do Representante EPR/ABCR</td>
-          <td style="font-size:11px">Conselho ABCR</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-pres">Presencial</span></td>
-          <td style="font-size:11px">José Cassaniga / Luciano Lourenço</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>30/03/2026</td>
-          <td>Alterações do Estatuto Social da ABCR</td>
-          <td style="font-size:11px">CSJ</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Mariana Galhardo / Mayara Regina / Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="ARTESP">
-          <td>31/03/2026</td>
-          <td>Consulta Pública: Nível de Serviço</td>
-          <td style="font-size:11px">Fórum PPCS</td>
-          <td><span class="badge badge-artesp">ARTESP</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>13/04/2026</td>
-          <td>55º Reunião Ordinária do CDMR</td>
-          <td style="font-size:11px">CDMR</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-pres">Presencial</span></td>
-          <td style="font-size:11px">Luciano Lourenço / Paulo Manoel</td>
-        </tr>
-        <tr data-ag="ARTESP">
-          <td>17/04/2026</td>
-          <td>Reunião Infraplan e ABCR - Nível de Serviço ARTESP</td>
-          <td style="font-size:11px">Fórum PPCS</td>
-          <td><span class="badge badge-artesp">ARTESP</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>30/04/2026</td>
-          <td>Reunião Ordinária Fórum Free Flow</td>
-          <td style="font-size:11px">Fórum Free Flow</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Luciano Lourenço</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>11/05/2026</td>
-          <td>56º Reunião Ordinária do CDMR</td>
-          <td style="font-size:11px">CDMR</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-pres">Presencial</span></td>
-          <td style="font-size:11px">Luciano Lourenço</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>12/05/2026</td>
-          <td>27ª reunião ordinária Comitê de Sustentabilidade</td>
-          <td style="font-size:11px">CSUS</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Flávia Amado / Cássia Padilha</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>13/05/2026</td>
-          <td>Apresentação versão final metodologia RT</td>
-          <td style="font-size:11px">FT Reforma Tributária</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Leandro Nishiayma / Carolina Dala Costa / Enio Stein / Fernanda Matias / Rafael Valente</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>14/05/2026</td>
-          <td>Resolução SENATRAN</td>
-          <td style="font-size:11px">FF Minas Gerais</td>
-          <td><span class="badge badge-transv">ARTEMIG</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Diogo/ Conceição</td>
-        </tr>
-        <tr data-ag="ABCR">
-          <td>18/05/2026</td>
-          <td>Alinhamento Atuação EPR</td>
-          <td style="font-size:11px">-</td>
-          <td><span class="badge badge-abcr">ABCR</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>19/05/2026</td>
-          <td>Comitê de Imagem Setorial ABCR</td>
-          <td style="font-size:11px">GT CIS</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Pablo/Natalia</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td>21/05/2026</td>
-          <td>Padronização dos Eventogramas</td>
-          <td style="font-size:11px">FT Eventrogramas</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Bruna Rodrigues</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>27/05/2026</td>
-          <td>Revisão Ordinária 5/26 - Engenharia</td>
-          <td style="font-size:11px">Comitê Engenharia</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Guilhermo Altrichter</td>
-        </tr>
-        <tr data-ag="TODOS">
-          <td>28/05/2026</td>
-          <td>Revisão Ordinária 5/26 - Segurança e Qualidade Operacional</td>
-          <td style="font-size:11px">Comitê de Segurança e Qualidade Operacional</td>
-          <td><span class="badge badge-transv">Transversal</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Fernando Mileo</td>
-        </tr>
-        <tr data-ag="ANTT">
-          <td>01/06/2026</td>
-          <td>Padronização dos Eventogramas</td>
-          <td style="font-size:11px">FT Eventrogramas</td>
-          <td><span class="badge badge-antt">ANTT</span></td>
-          <td><span class="badge badge-virtual">Virtual</span></td>
-          <td style="font-size:11px">Bruna Rodrigues</td>
-        </tr></tbody>
-  </table></div>
+  <!-- Gráficos -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+    <div class="table-wrap" style="padding:16px;margin-bottom:0">
+      <div class="sec-title" style="margin-top:0;padding-top:0">📊 Reuniões por mês</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;color:var(--muted)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#1B3A5C;display:inline-block"></span>Realizadas</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:3px;background:#7DB5A0;display:inline-block"></span>Meta (2/mês)</span>
+      </div>
+      <div style="position:relative;height:160px">
+        <canvas id="chartMes" role="img" aria-label="Reuniões por mês em 2026">Dados de reuniões mensais.</canvas>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="padding:16px;margin-bottom:0">
+      <div class="sec-title" style="margin-top:0;padding-top:0">🏢 Reuniões por agência</div>
+      <div id="leg-ag" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;color:var(--muted)"></div>
+      <div style="position:relative;height:160px">
+        <canvas id="chartAg" role="img" aria-label="Distribuição de reuniões por agência">Dados por agência.</canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Rankings -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+    <div class="table-wrap" style="padding:16px;margin-bottom:0">
+      <div class="sec-title" style="margin-top:0;padding-top:0">🏆 Comitês e fóruns mais ativos</div>
+      <div id="rank-comites"></div>
+    </div>
+
+    <div class="table-wrap" style="padding:16px;margin-bottom:0">
+      <div class="sec-title" style="margin-top:0;padding-top:0">🏷️ Temas mais recorrentes</div>
+      <div id="rank-temas"></div>
+    </div>
+
+  </div>
+
 </section>
 
 <!-- REUNIÕES -->
@@ -1418,6 +1247,163 @@ function searchReps(q) {
     document.querySelectorAll('.rep-filter').forEach(b=>b.classList.remove('active'));
     document.querySelector('.rep-filter').classList.add('active');
   }
+}
+
+// ── DASHBOARD ANALYTICS ─────────────────────────────────────────────────
+const AG_COLORS = ['#1B3A5C','#7DB5A0','#5A9485','#B5D4F4','#E8F2EF','#D6E4F7'];
+
+// Data from Python
+const BAR_DATA_FULL   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const AG_LABELS_FULL  = [];
+const AG_COUNTS_FULL  = [];
+const COMITES_LABELS  = [];
+const COMITES_COUNTS  = [];
+const MAX_COMITE      = 1;
+const TEMAS_LABELS    = [];
+const TEMAS_COUNTS    = [];
+const MAX_TEMA        = 1;
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+let dashPeriod = 'ano';
+let dashAg = 'TODOS';
+let chartMesInst = null;
+let chartAgInst  = null;
+
+function getBarData(period) {
+  const hoje = new Date();
+  const mes = hoje.getMonth(); // 0-indexed
+  if (period === 'mes') {
+    const d = new Array(12).fill(0);
+    d[mes] = BAR_DATA_FULL[mes];
+    return d;
+  }
+  if (period === 'tri') {
+    const d = new Array(12).fill(0);
+    for (let i = Math.max(0, mes-2); i <= mes; i++) d[i] = BAR_DATA_FULL[i];
+    return d;
+  }
+  return BAR_DATA_FULL;
+}
+
+function buildAgLegend() {
+  const leg = document.getElementById('leg-ag');
+  if (!leg) return;
+  leg.innerHTML = AG_LABELS_FULL.map((l,i) => {
+    const total = AG_COUNTS_FULL.reduce((a,b)=>a+b,0);
+    const pct = total ? Math.round(AG_COUNTS_FULL[i]/total*100) : 0;
+    return `<span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)">
+      <span style="width:10px;height:10px;border-radius:2px;background:${AG_COLORS[i % AG_COLORS.length]};display:inline-block"></span>
+      ${l} ${pct}%</span>`;
+  }).join('');
+}
+
+function buildRanking(containerId, labels, counts, maxCount) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = labels.map((label, i) => {
+    const pct = maxCount > 0 ? Math.round((counts[i]/maxCount)*100) : 0;
+    const isTop = i < 2;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:20px;height:20px;border-radius:50%;background:${isTop?'#1B3A5C':'#E8F2EF'};
+        color:${isTop?'#fff':'#1B3A5C'};font-size:11px;font-weight:500;
+        display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+      <div style="font-size:12px;color:var(--text);flex:1;min-width:0;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${label}</div>
+      <div style="width:80px;background:var(--epr-light);border-radius:4px;height:6px;flex-shrink:0">
+        <div style="height:6px;border-radius:4px;background:#7DB5A0;width:${pct}%"></div></div>
+      <div style="font-size:11px;color:var(--muted);width:20px;text-align:right;flex-shrink:0">${counts[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+function initDashCharts() {
+  if (typeof Chart === 'undefined') { setTimeout(initDashCharts, 200); return; }
+
+  const barCtx = document.getElementById('chartMes');
+  if (barCtx) {
+    chartMesInst = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: MESES,
+        datasets: [
+          { label: 'Realizadas', data: getBarData(dashPeriod), backgroundColor: '#1B3A5C', borderRadius: 4 },
+          { label: 'Meta', data: new Array(12).fill(2), type: 'line', borderColor: '#7DB5A0',
+             borderWidth: 1.5, borderDash: [4,3], pointRadius: 0, fill: false }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { font: { size: 10 }, autoSkip: false, maxRotation: 0 }, grid: { display: false } },
+          y: { ticks: { font: { size: 10 }, stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  const agCtx = document.getElementById('chartAg');
+  if (agCtx && AG_COUNTS_FULL.length > 0) {
+    chartAgInst = new Chart(agCtx, {
+      type: 'doughnut',
+      data: {
+        labels: AG_LABELS_FULL,
+        datasets: [{ data: AG_COUNTS_FULL, backgroundColor: AG_COLORS.slice(0, AG_LABELS_FULL.length),
+          borderWidth: 0, hoverOffset: 4 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, cutout: '62%',
+        plugins: { legend: { display: false }, tooltip: { callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.raw} reuniões`
+        }}}
+      }
+    });
+    buildAgLegend();
+  }
+
+  buildRanking('rank-comites', COMITES_LABELS, COMITES_COUNTS, MAX_COMITE);
+  buildRanking('rank-temas', TEMAS_LABELS, TEMAS_COUNTS, MAX_TEMA);
+}
+
+function dashFilter(btn, period) {
+  document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  dashPeriod = period;
+  if (chartMesInst) {
+    chartMesInst.data.datasets[0].data = getBarData(period);
+    chartMesInst.update();
+  }
+  const d = document.getElementById('d-reun');
+  if (d) d.textContent = getBarData(period).reduce((a,b)=>a+b,0);
+}
+
+function dashAgencia(btn, ag) {
+  document.querySelectorAll('[data-ag]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  dashAg = ag;
+  if (chartAgInst) {
+    if (ag === 'TODOS') {
+      chartAgInst.data.datasets[0].data = AG_COUNTS_FULL;
+      chartAgInst.data.labels = AG_LABELS_FULL;
+    } else {
+      const idx = AG_LABELS_FULL.indexOf(ag);
+      chartAgInst.data.datasets[0].data = idx >= 0 ? [AG_COUNTS_FULL[idx]] : [0];
+      chartAgInst.data.labels = idx >= 0 ? [ag] : [ag];
+    }
+    chartAgInst.update();
+    buildAgLegend();
+  }
+}
+
+// Load Chart.js then init
+if (!document.getElementById('chartjs-cdn')) {
+  const s = document.createElement('script');
+  s.id = 'chartjs-cdn';
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+  s.onload = initDashCharts;
+  document.head.appendChild(s);
+} else {
+  initDashCharts();
 }
 </script>
 </body>
