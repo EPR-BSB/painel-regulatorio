@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Regulatório — Grupo EPR</title>
+<title>Painel Institucional — Grupo EPR</title>
 <style>
   :root {
     --epr-dark:#1B3A5C; --epr-med:#1F4872; --epr-sage:#7DB5A0; --epr-sage-d:#5A9485;
@@ -263,13 +263,13 @@
 <div id="login-screen">
   <div class="login-card">
     
-    <h2>Painel Regulatório EPR</h2>
+    <h2>Painel Institucional EPR</h2>
     <p>Diretoria de Assuntos Institucionais<br>Digite a senha para acessar</p>
     <input type="password" id="pw-input" placeholder="Senha de acesso"
       onkeydown="if(event.key==='Enter') doLogin()">
     <button onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-error">❌ Senha incorreta. Tente novamente.</div>
-    <div class="version">Grupo EPR · Gerado em 02/06/2026</div>
+    <div class="version">Grupo EPR · Gerado em 08/06/2026</div>
   </div>
 </div>
 
@@ -311,12 +311,12 @@
     <span style="color:#fff;font-size:22px;font-weight:900">EPR</span>
     <div class="hdr-sep"></div>
     <div>
-      <h1>Painel de Monitoramento Regulatório</h1>
+      <h1>Painel Institucional</h1>
       <p>Diretoria de Assuntos Institucionais &nbsp;·&nbsp; Acompanhamento Regulatório</p>
     </div>
   </div>
   <div class="right">
-    <div class="date-badge">Atualizado em<br><b>02/06/2026</b></div>
+    <div class="date-badge">Atualizado em<br><b>08/06/2026</b></div>
     <button class="logout-btn" onclick="doLogout()">🔒 Sair</button>
   </div>
 </div>
@@ -358,7 +358,7 @@
 
   <!-- KPIs -->
   <div class="kpi-grid" style="margin-bottom:16px">
-    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val" id="d-reun">19</span></div>
+    <div class="kpi"><span class="kpi-label">Reuniões Realizadas</span><span class="kpi-val">19</span></div>
     <div class="kpi green"><span class="kpi-label">Contribuições Enviadas</span><span class="kpi-val">8 / 9</span></div>
     <div class="kpi" style="border-left-color:var(--epr-sage)"><span class="kpi-label">% Contribuição EPR</span><span class="kpi-val">100%</span></div>
     <div class="kpi orange"><span class="kpi-label">AP + CP + FT</span><span class="kpi-val">9</span></div>
@@ -1253,15 +1253,15 @@ function searchReps(q) {
 const AG_COLORS = ['#1B3A5C','#7DB5A0','#5A9485','#B5D4F4','#E8F2EF','#D6E4F7'];
 
 // Data from Python
-const BAR_DATA_FULL   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-const AG_LABELS_FULL  = [];
-const AG_COUNTS_FULL  = [];
-const COMITES_LABELS  = [];
-const COMITES_COUNTS  = [];
-const MAX_COMITE      = 1;
-const TEMAS_LABELS    = [];
-const TEMAS_COUNTS    = [];
-const MAX_TEMA        = 1;
+const BAR_DATA_FULL   = [0, 0, 6, 3, 9, 1, 0, 0, 0, 0, 0, 0];
+const AG_LABELS_FULL  = ['ABCR', 'ANTT', 'ARTEMIG', 'ARTESP', 'TRANSVERSAL'];
+const AG_COUNTS_FULL  = [1, 3, 1, 3, 11];
+const COMITES_LABELS  = ['Fórum PPCS', 'FT Eventrogramas', 'CDMR', 'Conselho ABCR', 'CSJ'];
+const COMITES_COUNTS  = [3, 3, 2, 1, 1];
+const MAX_COMITE      = 3;
+const TEMAS_LABELS    = ['Padronização dos Eventogramas', 'Consultas Públicas ARTESP Free-flow', 'Checkpoint 2: Eventograma ANTT', 'Atualiz. sobre possíveis suspensão de mu', 'Alteração do Representante EPR/ABCR'];
+const TEMAS_COUNTS    = [2, 1, 1, 1, 1];
+const MAX_TEMA        = 2;
 const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
 let dashPeriod = 'ano';
@@ -1327,7 +1327,7 @@ function initDashCharts() {
         labels: MESES,
         datasets: [
           { label: 'Realizadas', data: getBarData(dashPeriod), backgroundColor: '#1B3A5C', borderRadius: 4 },
-          { label: 'Meta', data: new Array(12).fill(2), type: 'line', borderColor: '#7DB5A0',
+          { label: 'Meta (7/mês)', data: new Array(12).fill(7), type: 'line', borderColor: '#7DB5A0',
              borderWidth: 1.5, borderDash: [4,3], pointRadius: 0, fill: false }
         ]
       },
@@ -1373,8 +1373,6 @@ function dashFilter(btn, period) {
     chartMesInst.data.datasets[0].data = getBarData(period);
     chartMesInst.update();
   }
-  const d = document.getElementById('d-reun');
-  if (d) d.textContent = getBarData(period).reduce((a,b)=>a+b,0);
 }
 
 function dashAgencia(btn, ag) {
